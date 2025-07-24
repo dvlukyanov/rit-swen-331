@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Integer Overflow Demo</title>
+  <style>
+    body {
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .binary-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .binary-container {
+      font-size: 3rem;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .bit {
+      cursor: pointer;
+      padding: 0.2em 0.5em;
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 5px;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .bit:hover {
+      background: #e0e0e0;
+    }
+
+    .decimal-display {
+      font-size: 2.5rem;
+      margin-top: 1rem;
+      text-align: center;
+      color: #333;
+    }
+
+    .button {
+      font-size: 2rem;
+      padding: 0.3em 0.6em;
+      background: #fff;
+      border: 2px solid #333;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: #e0e0e0;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="binary-row">
+    <div class="binary-container" id="binary">
+      <!-- Bits will be added here dynamically -->
+    </div>
+    <div class="button" id="addByte">+</div>
+  </div>
+
+  <div class="decimal-display" id="decimal">
+    Decimal: 0
+  </div>
+
+  <script>
+    let numBits = 8;
+    const binaryContainer = document.getElementById('binary');
+    const decimalDisplay = document.getElementById('decimal');
+    const addByteBtn = document.getElementById('addByte');
+
+    // Create bits
+    function renderBits() {
+      binaryContainer.innerHTML = '';
+      for (let i = 0; i < numBits; i++) {
+        const span = document.createElement('span');
+        span.className = 'bit';
+        span.textContent = '0';
+        span.dataset.index = i;
+        span.addEventListener('click', () => {
+          span.textContent = span.textContent === '0' ? '1' : '0';
+          updateDecimal();
+        });
+        binaryContainer.appendChild(span);
+      }
+    }
+
+    function updateDecimal() {
+      const bits = Array.from(document.querySelectorAll('.bit'))
+        .map(bit => bit.textContent);
+      const binaryStr = bits.join('');
+      const decimalValue = parseInt(binaryStr, 2);
+      decimalDisplay.textContent = 'Decimal: ' + decimalValue;
+    }
+
+    addByteBtn.addEventListener('click', () => {
+      const currentBits = Array.from(document.querySelectorAll('.bit'))
+        .map(b => b.textContent)
+        .join('');
+      const currentValue = parseInt(currentBits, 2);
+      const maxVal = 2 ** numBits;
+      const newValue = (currentValue + 1) % maxVal;
+      
+      const binaryStr = newValue.toString(2).padStart(numBits, '0');
+      document.querySelectorAll('.bit').forEach((bit, idx) => {
+        bit.textContent = binaryStr[idx];
+      });
+
+      updateDecimal();
+    });
+
+    renderBits();
+    updateDecimal();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>XSS Demo</title>
+</head>
+<body>
+  <h1>XSS Demo</h1>
+
+  <p>Examples:</p>
+  <ul>
+	<li>qwe</li>
+	<li>&lt;h1&gt;qwe&lt;/h1&gt;</li>
+	<li>&lt;script&gt;alert('XSS')&lt;/script&gt; (not in modern browsers)</li>
+	<li>&lt;img src=x onerror=alert('XSS')&gt;</li>
+  </ul>
+
+  <form id="xssForm">
+    <label for="input">Enter something:</label><br>
+    <input type="text" id="input" name="input" />
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2>Output:</h2>
+  <div id="output"></div>
+
+  <script>
+    document.getElementById("xssForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const input = document.getElementById("input").value;
+      document.getElementById("output").innerHTML = input;
+    });
+  </script>
+</body>
+</html>
